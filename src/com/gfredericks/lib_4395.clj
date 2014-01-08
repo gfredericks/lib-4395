@@ -1,15 +1,17 @@
 (ns com.gfredericks.lib-4395)
 
-(defmacro defs-from-map
-  "E.g., (def m foo bar) gives
+(defmacro defs-keys
+  "E.g., (defs-keys foo bar
+           m)
+         gives
          (def foo (:foo m))
            and
          (def bar (:bar m))
   more or less."
-  [m & syms]
+  [& args]
   (let [mm (gensym)]
-    `(let [~mm ~m]
-       ~@(for [sym syms
+    `(let [~mm ~(last args)]
+       ~@(for [sym (butlast args)
                :let [kw (keyword (str sym))]]
            `(def ~sym (~kw ~mm))))))
 
@@ -43,9 +45,8 @@
    :* (compile-monoid one times)
    :- (compile-minus plus negate)})
 
-#_(defn compile-field
-  "Returns a map with :/")
-
-(defmacro defring
-  [ring]
-  (list `defs-from-map ring '+ '* '-))
+(defn compile-field
+  "Returns a map with :+, :-, :*, :/"
+  [zero one plus negate times invert]
+  (assoc (compile-ring zero one plus negate times)
+    :/ (compile-minus times invert)))
