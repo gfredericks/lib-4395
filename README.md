@@ -31,6 +31,9 @@ my.mod-10> (- 9 8 7)
 4
 ```
 
+You can create a map of functions with `compile-monoid`, `compile-group`, `compile-ring`,
+and `compile-field`. Then you can (if desired) def those functions succinctly with `defs-keys`.
+
 
 ## License
 
